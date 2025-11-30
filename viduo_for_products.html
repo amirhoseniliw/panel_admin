@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - ویدیو معرفی محصول</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* Videos Grid */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .video-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            height: 180px;
+            width: 100%;
+            background: linear-gradient(45deg, #4ecca3, #2a9d8f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .play-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .video-info {
+            padding: 20px;
+        }
+        
+        .video-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .video-product {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        
+        .action-btn-video {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+            margin: 0 3px;
+        }
+        
+        .action-btn-video:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bg-primary-light {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.15) 0%, rgba(42, 157, 143, 0.15) 100%);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            color: #2ecc71;
+        }
+        
+        .bg-warning-light {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            color: #f39c12;
+        }
+        
+        .bg-info-light {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            color: #3498db;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(78, 204, 163, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .browse-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 15px;
+            }
+            
+            .video-info {
+                padding: 15px;
+            }
+            
+            .action-btn-video {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت ویدیوهای معرفی محصول</h2>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#uploadVideoModal">
+                            <i class="fas fa-plus me-2"></i>آپلود ویدیو جدید
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-primary-light">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع ویدیوها</h6>
+                                    <h3 class="card-value">48</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 15% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-success-light">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع بازدیدها</h6>
+                                    <h3 class="card-value">12.8K</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 22% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-warning-light">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع لایک‌ها</h6>
+                                    <h3 class="card-value">3.2K</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 18% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-info-light">
+                                        <i class="fas fa-comment"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع نظرات</h6>
+                                    <h3 class="card-value">856</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 3% کاهش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <h5 class="mb-4">آپلود ویدیوی جدید</h5>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h5 class="upload-text">ویدیوی خود را اینجا بکشید یا کلیک کنید</h5>
+                            <p class="text-muted mb-3">فرمت‌های پشتیبانی شده: MP4, AVI, MOV - حداکثر حجم: 500MB</p>
+                            <button class="browse-btn">انتخاب فایل</button>
+                            <input type="file" id="fileInput" accept="video/*" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Videos Grid -->
+                    <div class="videos-grid">
+                        <!-- Video 1 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">02:45</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">معرفی لپ تاپ ایسوس مدل VivoBook</h3>
+                                <div class="video-product">لپ تاپ و کامپیوتر</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">1.2K</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">245</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">32</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video 2 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">03:12</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">آموزش استفاده از گوشی سامسونگ Galaxy S23</h3>
+                                <div class="video-product">موبایل و تبلت</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">2.8K</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">567</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">89</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video 3 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">01:58</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">بررسی پیراهن مردانه مدل کلاسیک</h3>
+                                <div class="video-product">پوشاک و مد</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">856</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">156</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">24</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video 4 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">04:25</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">آموزش استفاده از ظرف شویی برقی</h3>
+                                <div class="video-product">خانه و آشپزخانه</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">1.5K</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">324</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">45</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video 5 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">02:15</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">معرفی کتاب برنامه نویسی پایتون</h3>
+                                <div class="video-product">کتاب و لوازم التحریر</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">923</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">189</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">31</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video 6 -->
+                        <div class="video-card">
+                            <div class="video-thumbnail" data-bs-toggle="modal" data-bs-target="#videoPlayerModal">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-duration">03:42</div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">بررسی خودروی کنترل از راه دور</h3>
+                                <div class="video-product">اسباب بازی و بازی</div>
+                                <div class="video-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">1.8K</div>
+                                        <div class="stat-label">بازدید</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">421</div>
+                                        <div class="stat-label">لایک</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">67</div>
+                                        <div class="stat-label">نظر</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="action-btn-video" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-video" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-video" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Upload Video Modal -->
+    <div class="modal fade" id="uploadVideoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">آپلود ویدیوی جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">عنوان ویدیو</label>
+                            <input type="text" class="form-control rounded-3" placeholder="عنوان ویدیو را وارد کنید">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">محصول مرتبط</label>
+                            <select class="form-select rounded-3">
+                                <option>انتخاب محصول</option>
+                                <option>لپ تاپ ایسوس مدل VivoBook</option>
+                                <option>گوشی سامسونگ مدل Galaxy S23</option>
+                                <option>پیراهن مردانه مدل کلاسیک</option>
+                                <option>ظرف شویی برقی مدل پیشرفته</option>
+                                <option>کتاب برنامه نویسی پایتون</option>
+                                <option>خودروی کنترل از راه دور</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">توضیحات</label>
+                            <textarea class="form-control rounded-3" rows="3" placeholder="توضیحات ویدیو"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">مدت زمان (دقیقه)</label>
+                                <input type="number" class="form-control rounded-3" placeholder="مدت زمان ویدیو">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">کیفیت ویدیو</label>
+                                <select class="form-select rounded-3">
+                                    <option>1080p</option>
+                                    <option>720p</option>
+                                    <option>480p</option>
+                                    <option>360p</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">فایل ویدیو</label>
+                            <div class="upload-area" style="padding: 30px 20px;">
+                                <div class="upload-icon">
+                                    <i class="fas fa-file-video"></i>
+                                </div>
+                                <h6 class="upload-text">فایل ویدیو را انتخاب کنید</h6>
+                                <p class="text-muted mb-3">فرمت‌های پشتیبانی شده: MP4, AVI, MOV - حداکثر حجم: 500MB</p>
+                                <button class="browse-btn" type="button">انتخاب فایل</button>
+                                <input type="file" accept="video/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="publishVideo" checked>
+                            <label class="form-check-label" for="publishVideo">انتشار فوری ویدیو</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="allowComments" checked>
+                            <label class="form-check-label" for="allowComments">اجازه ارسال نظر</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary-custom">آپلود ویدیو</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="modal fade" id="videoPlayerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">معرفی لپ تاپ ایسوس مدل VivoBook</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="ویدیو معرفی" allowfullscreen></iframe>
+                    </div>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="badge bg-primary me-2">لپ تاپ و کامپیوتر</span>
+                                <span class="text-muted">1402/05/15</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary rounded-3 me-2">
+                                    <i class="fas fa-thumbs-up me-1"></i> 245
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary rounded-3">
+                                    <i class="fas fa-share me-1"></i> اشتراک‌گذاری
+                                </button>
+                            </div>
+                        </div>
+                        <p>در این ویدیو به معرفی کامل لپ تاپ ایسوس مدل VivoBook می‌پردازیم. این لپ تاپ با پردازنده قدرتمند و صفحه نمایش با کیفیت، گزینه‌ای عالی برای کاربران حرفه‌ای است.</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Upload Area
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const fileName = this.files[0].name;
+                alert(`فایل "${fileName}" انتخاب شد. آماده برای آپلود.`);
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn-video').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('eye')) {
+                    alert('مشاهده اطلاعات ویدیو');
+                } else if (action.includes('edit')) {
+                    alert('ویرایش اطلاعات ویدیو');
+                } else if (action.includes('trash')) {
+                    if (confirm('آیا از حذف این ویدیو اطمینان دارید؟')) {
+                        alert('ویدیو حذف شد');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

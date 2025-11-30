@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - تیکت‌ها</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* Tickets Table */
+        .tickets-table {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+        }
+        
+        .table-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-filters {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            background: white;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: var(--text-light);
+            border-top: none;
+            padding: 15px 20px;
+        }
+        
+        .table td {
+            padding: 15px 20px;
+            vertical-align: middle;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .priority-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-high {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .badge-medium {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        .badge-low {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-open {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .badge-in-progress {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        .badge-resolved {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .badge-closed {
+            background: rgba(149, 165, 166, 0.15);
+            color: #95a5a6;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+            margin: 0 3px;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .pagination-custom {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-item-custom {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .page-item-custom:hover, .page-item-custom.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bg-primary-light {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.15) 0%, rgba(42, 157, 143, 0.15) 100%);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            color: #2ecc71;
+        }
+        
+        .bg-warning-light {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            color: #f39c12;
+        }
+        
+        .bg-info-light {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            color: #3498db;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        /* Ticket Details Modal */
+        .ticket-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .message-bubble {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        
+        .message-bubble.user {
+            background: rgba(78, 204, 163, 0.1);
+            margin-left: auto;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .message-sender {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .message-time {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .message-content {
+            line-height: 1.6;
+        }
+        
+        .reply-box {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت تیکت‌ها</h2>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#createTicketModal">
+                            <i class="fas fa-plus me-2"></i>ایجاد تیکت جدید
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-primary-light">
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع تیکت‌ها</h6>
+                                    <h3 class="card-value">248</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 12% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-success-light">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h6 class="card-title">تیکت‌های حل شده</h6>
+                                    <h3 class="card-value">185</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 8% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-warning-light">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <h6 class="card-title">تیکت‌های اولویت بالا</h6>
+                                    <h3 class="card-value">24</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 3 تیکت
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-info-light">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <h6 class="card-title">زمان میانگین پاسخ</h6>
+                                    <h3 class="card-value">1.8 ساعت</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 0.2 ساعت
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tickets Table -->
+                    <div class="tickets-table">
+                        <div class="table-header">
+                            <h5 class="mb-0">لیست تیکت‌ها</h5>
+                            <div class="table-filters">
+                                <select class="filter-select">
+                                    <option>همه وضعیت‌ها</option>
+                                    <option>باز</option>
+                                    <option>در حال پردازش</option>
+                                    <option>حل شده</option>
+                                    <option>بسته شده</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>همه اولویت‌ها</option>
+                                    <option>بالا</option>
+                                    <option>متوسط</option>
+                                    <option>پایین</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>آخرین تیکت‌ها</option>
+                                    <option>قدیمی‌ترین</option>
+                                    <option>بر اساس اولویت</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>شماره تیکت</th>
+                                        <th>مشتری</th>
+                                        <th>موضوع</th>
+                                        <th>تاریخ ایجاد</th>
+                                        <th>اولویت</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230515-001</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">علی محمدی</div>
+                                                    <div class="text-muted small">ali.mohammadi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">مشکل در ورود به حساب کاربری</div>
+                                            <div class="text-muted small">دپارتمان: پشتیبانی فنی</div>
+                                        </td>
+                                        <td>1402/05/15<br><span class="text-muted small">14:30</span></td>
+                                        <td><span class="priority-badge badge-high">بالا</span></td>
+                                        <td><span class="status-badge badge-in-progress">در حال پردازش</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230514-002</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/3498db/ffffff?text=M" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">مریم رضایی</div>
+                                                    <div class="text-muted small">maryam.razavi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">درخواست بازگشت وجه</div>
+                                            <div class="text-muted small">دپارتمان: مالی</div>
+                                        </td>
+                                        <td>1402/05/14<br><span class="text-muted small">16:45</span></td>
+                                        <td><span class="priority-badge badge-medium">متوسط</span></td>
+                                        <td><span class="status-badge badge-resolved">حل شده</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230514-003</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/f39c12/ffffff?text=H" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">حسام کریمی</div>
+                                                    <div class="text-muted small">hessam.karimi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">پیشنهاد بهبود سایت</div>
+                                            <div class="text-muted small">دپارتمان: توسعه</div>
+                                        </td>
+                                        <td>1402/05/14<br><span class="text-muted small">12:15</span></td>
+                                        <td><span class="priority-badge badge-low">پایین</span></td>
+                                        <td><span class="status-badge badge-open">باز</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230513-004</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/e74c3c/ffffff?text=Z" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">زهرا احمدی</div>
+                                                    <div class="text-muted small">zahra.ahmadi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">مشکل در پرداخت آنلاین</div>
+                                            <div class="text-muted small">دپارتمان: پشتیبانی فنی</div>
+                                        </td>
+                                        <td>1402/05/13<br><span class="text-muted small">18:20</span></td>
+                                        <td><span class="priority-badge badge-high">بالا</span></td>
+                                        <td><span class="status-badge badge-in-progress">در حال پردازش</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230512-005</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/9b59b6/ffffff?text=M" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">مهدی نوری</div>
+                                                    <div class="text-muted small">mehdi.noori@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">درخواست تعویض محصول</div>
+                                            <div class="text-muted small">دپارتمان: فروش</div>
+                                        </td>
+                                        <td>1402/05/12<br><span class="text-muted small">10:30</span></td>
+                                        <td><span class="priority-badge badge-medium">متوسط</span></td>
+                                        <td><span class="status-badge badge-resolved">حل شده</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230511-006</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/1abc9c/ffffff?text=F" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">فاطمه حسینی</div>
+                                                    <div class="text-muted small">fateme.hosseini@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">سوال درباره محصول</div>
+                                            <div class="text-muted small">دپارتمان: فروش</div>
+                                        </td>
+                                        <td>1402/05/11<br><span class="text-muted small">15:45</span></td>
+                                        <td><span class="priority-badge badge-low">پایین</span></td>
+                                        <td><span class="status-badge badge-closed">بسته شده</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="باز کردن"><i class="fas fa-redo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#TKT-20230510-007</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/34495e/ffffff?text=R" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">رضا محمدی</div>
+                                                    <div class="text-muted small">reza.mohammadi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold">گزارش خطا در سایت</div>
+                                            <div class="text-muted small">دپارتمان: توسعه</div>
+                                        </td>
+                                        <td>1402/05/10<br><span class="text-muted small">09:15</span></td>
+                                        <td><span class="priority-badge badge-high">بالا</span></td>
+                                        <td><span class="status-badge badge-in-progress">در حال پردازش</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#ticketDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn" title="بستن"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination-custom">
+                            <div class="page-item-custom active">1</div>
+                            <div class="page-item-custom">2</div>
+                            <div class="page-item-custom">3</div>
+                            <div class="page-item-custom">4</div>
+                            <div class="page-item-custom">5</div>
+                            <div class="page-item-custom">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Ticket Modal -->
+    <div class="modal fade" id="createTicketModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">ایجاد تیکت جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">موضوع تیکت</label>
+                            <input type="text" class="form-control rounded-3" placeholder="موضوع تیکت را وارد کنید">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">دپارتمان</label>
+                                <select class="form-select rounded-3">
+                                    <option>پشتیبانی فنی</option>
+                                    <option>فروش</option>
+                                    <option>مالی</option>
+                                    <option>توسعه</option>
+                                    <option>بازاریابی</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">اولویت</label>
+                                <select class="form-select rounded-3">
+                                    <option>پایین</option>
+                                    <option>متوسط</option>
+                                    <option>بالا</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">توضیحات</label>
+                            <textarea class="form-control rounded-3" rows="4" placeholder="توضیحات تیکت را وارد کنید"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">پیوست فایل (اختیاری)</label>
+                            <div class="border rounded-3 p-3">
+                                <button class="btn btn-sm btn-outline-primary rounded-3">
+                                    <i class="fas fa-paperclip me-1"></i> انتخاب فایل
+                                </button>
+                                <input type="file" style="display: none;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary-custom">ایجاد تیکت</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Details Modal -->
+    <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <div class="ticket-details-header">
+                        <h5 class="modal-title">جزئیات تیکت #TKT-20230515-001</h5>
+                        <div>
+                            <span class="priority-badge badge-high me-2">اولویت بالا</span>
+                            <span class="status-badge badge-in-progress">در حال پردازش</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3">اطلاعات مشتری</h6>
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://placehold.co/50x50/4ecca3/ffffff?text=A" class="customer-avatar me-3" alt="Customer">
+                                <div>
+                                    <div class="fw-bold">علی محمدی</div>
+                                    <div class="text-muted small">ali.mohammadi@example.com</div>
+                                    <div class="text-muted small">09123456789</div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="fw-bold mb-2">دپارتمان:</div>
+                                <div class="text-muted">پشتیبانی فنی</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3">اطلاعات تیکت</h6>
+                            <div class="mb-2">
+                                <span class="text-muted">تاریخ ایجاد:</span>
+                                <span class="fw-bold me-2">1402/05/15 - 14:30</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted">آخرین بروزرسانی:</span>
+                                <span class="fw-bold me-2">1402/05/15 - 16:45</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted">اپراتور:</span>
+                                <span class="fw-bold me-2">احمد رضایی</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3">موضوع تیکت</h6>
+                    <div class="border rounded-3 p-4 mb-4">
+                        <div class="fw-bold fs-5 mb-3">مشکل در ورود به حساب کاربری</div>
+                        <p class="mb-0">سلام، من نمی‌توانم به حساب کاربری خود وارد شوم. هنگام ورود پیام خطای "رمز عبور اشتباه" نمایش داده می‌شود، اما مطمئنم رمز عبور صحیح را وارد می‌کنم. لطفاً مشکل را بررسی کنید.</p>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3">تاریخچه گفتگو</h6>
+                    <div class="message-bubble">
+                        <div class="message-header">
+                            <div class="message-sender">علی محمدی (مشتری)</div>
+                            <div class="message-time">1402/05/15 - 14:30</div>
+                        </div>
+                        <div class="message-content">
+                            سلام، من نمی‌توانم به حساب کاربری خود وارد شوم. هنگام ورود پیام خطای "رمز عبور اشتباه" نمایش داده می‌شود، اما مطمئنم رمز عبور صحیح را وارد می‌کنم. لطفاً مشکل را بررسی کنید.
+                        </div>
+                    </div>
+                    
+                    <div class="message-bubble user">
+                        <div class="message-header">
+                            <div class="message-sender">احمد رضایی (اپراتور)</div>
+                            <div class="message-time">1402/05/15 - 15:15</div>
+                        </div>
+                        <div class="message-content">
+                            سلام آقای محمدی عزیز، از تماس شما متشکریم. لطفاً یک بار رمز عبور خود را بازنشانی کنید. اگر مشکل همچنان ادامه داشت، لطفاً اطلاع دهید.
+                        </div>
+                    </div>
+                    
+                    <div class="message-bubble">
+                        <div class="message-header">
+                            <div class="message-sender">علی محمدی (مشتری)</div>
+                            <div class="message-time">1402/05/15 - 16:30</div>
+                        </div>
+                        <div class="message-content">
+                            ممنون از پاسخ شما. من رمز عبور خود را بازنشانی کردم اما هنوز نمی‌توانم وارد شوم. مشکل همچنان ادامه دارد.
+                        </div>
+                    </div>
+                    
+                    <div class="reply-box">
+                        <h6 class="fw-bold mb-3">ارسال پاسخ</h6>
+                        <textarea class="form-control rounded-3" rows="4" placeholder="پاسخ خود را بنویسید..."></textarea>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary rounded-3 me-2">
+                                    <i class="fas fa-paperclip"></i> پیوست فایل
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary rounded-3">
+                                    <i class="fas fa-smile"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <select class="form-select form-select-sm d-inline-block w-auto me-2">
+                                    <option>در حال پردازش</option>
+                                    <option>حل شده</option>
+                                    <option>بسته شده</option>
+                                </select>
+                                <button class="btn btn-primary-custom rounded-3">ارسال پاسخ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('eye')) {
+                    // Ticket details modal will open automatically
+                } else if (action.includes('edit')) {
+                    alert('ویرایش اطلاعات تیکت');
+                } else if (action.includes('times')) {
+                    if (confirm('آیا از بستن این تیکت اطمینان دارید؟')) {
+                        alert('تیکت بسته شد');
+                    }
+                } else if (action.includes('redo')) {
+                    if (confirm('آیا از باز کردن مجدد این تیکت اطمینان دارید؟')) {
+                        alert('تیکت باز شد');
+                    }
+                }
+            });
+        });
+
+        // Create Ticket
+        document.querySelector('#createTicketModal .btn-primary-custom').addEventListener('click', function() {
+            alert('تیکت جدید با موفقیت ایجاد شد');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createTicketModal'));
+            modal.hide();
+        });
+
+        // Send Reply
+        document.querySelector('.reply-box .btn-primary-custom').addEventListener('click', function() {
+            alert('پاسخ با موفقیت ارسال شد');
+        });
+    </script>
+</body>
+</html>

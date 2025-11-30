@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - شارژ پنل‌ها</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* Charge Panels Grid */
+        .charge-panels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .charge-panel-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .charge-panel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .panel-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+        
+        .bg-panel-1 {
+            background: rgba(78, 204, 163, 0.15);
+            color: var(--primary-color);
+        }
+        
+        .bg-panel-2 {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .bg-panel-3 {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+        
+        .bg-panel-4 {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+        }
+        
+        .panel-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        
+        .panel-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .panel-body {
+            padding: 20px;
+        }
+        
+        .credit-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+        
+        .credit-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .credit-value {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+        }
+        
+        .credit-value.low {
+            color: #e74c3c;
+        }
+        
+        .credit-value.medium {
+            color: #f39c12;
+        }
+        
+        .credit-value.high {
+            color: #2ecc71;
+        }
+        
+        .progress-container {
+            margin: 25px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+            background: #f1f5f9;
+        }
+        
+        .progress-bar-custom {
+            border-radius: 6px;
+        }
+        
+        .usage-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .panel-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .days-remaining {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        .days-remaining.low {
+            color: #e74c3c;
+        }
+        
+        .days-remaining.medium {
+            color: #f39c12;
+        }
+        
+        .days-remaining.high {
+            color: #2ecc71;
+        }
+        
+        .action-btn-panel {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+            margin: 0 3px;
+        }
+        
+        .action-btn-panel:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bg-primary-light {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.15) 0%, rgba(42, 157, 143, 0.15) 100%);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            color: #2ecc71;
+        }
+        
+        .bg-warning-light {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            color: #f39c12;
+        }
+        
+        .bg-info-light {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            color: #3498db;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        /* Charge History Table */
+        .charge-history {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            margin-top: 30px;
+        }
+        
+        .table-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: var(--text-light);
+            border-top: none;
+            padding: 15px 20px;
+        }
+        
+        .table td {
+            padding: 15px 20px;
+            vertical-align: middle;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .badge-pending {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        .badge-failed {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .charge-panels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 15px;
+            }
+            
+            .panel-body {
+                padding: 15px;
+            }
+            
+            .action-btn-panel {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            
+            .usage-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت شارژ پنل‌ها</h2>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#chargePanelModal">
+                            <i class="fas fa-plus me-2"></i>شارژ پنل جدید
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-primary-light">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <h6 class="card-title">کل شارژ مصرفی</h6>
+                                    <h3 class="card-value">1.2M تومان</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 15% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-success-light">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <h6 class="card-title">مانده کل اعتبار</h6>
+                                    <h3 class="card-value">850K تومان</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 8% کاهش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-warning-light">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <h6 class="card-title">پنل‌های نیازمند شارژ</h6>
+                                    <h3 class="card-value">5</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 2 پنل
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-info-light">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <h6 class="card-title">تعداد تراکنش‌ها</h6>
+                                    <h3 class="card-value">142</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 12 تراکنش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charge Panels Grid -->
+                    <div class="charge-panels-grid">
+                        <!-- Panel 1 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-1">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل دیتابیس اصلی</h5>
+                                    <div class="panel-subtitle">MySQL Server</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value high">250,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>45%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-success" role="progressbar" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">1,200 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">36,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining high">208 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-2">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل وب سرور</h5>
+                                    <div class="panel-subtitle">Apache/Nginx</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value medium">85,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>78%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-warning" role="progressbar" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">2,800 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">84,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining medium">30 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-3">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل ایمیل سرور</h5>
+                                    <div class="panel-subtitle">Postfix/Dovecot</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value low">12,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>92%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-danger" role="progressbar" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">400 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">12,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining low">30 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-4">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل امنیتی</h5>
+                                    <div class="panel-subtitle">Firewall/IDS</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value high">180,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>35%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-success" role="progressbar" style="width: 35%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">600 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">18,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining high">300 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 5 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-1">
+                                    <i class="fas fa-cdn"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل CDN</h5>
+                                    <div class="panel-subtitle">Cloudflare/Custom</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value medium">45,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-warning" role="progressbar" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">1,500 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">45,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining medium">30 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 6 -->
+                        <div class="charge-panel-card">
+                            <div class="panel-header">
+                                <div class="panel-icon bg-panel-2">
+                                    <i class="fas fa-backup"></i>
+                                </div>
+                                <div>
+                                    <h5 class="panel-title">پنل بکاپ</h5>
+                                    <div class="panel-subtitle">Automated Backup</div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="credit-info">
+                                    <div class="credit-label">مانده اعتبار</div>
+                                    <div class="credit-value high">95,000 تومان</div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>اعتبار مصرف شده</span>
+                                        <span>52%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-custom bg-info" role="progressbar" style="width: 52%"></div>
+                                    </div>
+                                </div>
+                                <div class="usage-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف روزانه</div>
+                                        <div class="stat-value">1,000 تومان</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">مصرف ماهانه</div>
+                                        <div class="stat-value">30,000 تومان</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <div class="text-muted small">روزهای باقی‌مانده</div>
+                                    <div class="days-remaining high">95 روز</div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="action-btn-panel" title="شارژ" data-bs-toggle="modal" data-bs-target="#chargePanelModal"><i class="fas fa-plus"></i></button>
+                                    <button class="action-btn-panel" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-panel" title="تاریخچه"><i class="fas fa-history"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charge History Table -->
+                    <div class="charge-history">
+                        <div class="table-header">
+                            <h5 class="mb-0">تاریخچه شارژ پنل‌ها</h5>
+                            <div class="d-flex">
+                                <select class="form-select form-select-sm me-2" style="width: 150px;">
+                                    <option>همه پنل‌ها</option>
+                                    <option>دیتابیس</option>
+                                    <option>وب سرور</option>
+                                    <option>ایمیل سرور</option>
+                                </select>
+                                <select class="form-select form-select-sm" style="width: 150px;">
+                                    <option>آخرین شارژها</option>
+                                    <option>قدیمی‌ترین</option>
+                                    <option>بالاترین مبلغ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>شماره تراکنش</th>
+                                        <th>پنل</th>
+                                        <th>تاریخ</th>
+                                        <th>مبلغ شارژ</th>
+                                        <th>روش پرداخت</th>
+                                        <th>وضعیت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230515-001</span></td>
+                                        <td>پنل دیتابیس اصلی</td>
+                                        <td>1402/05/15</td>
+                                        <td><span class="fw-bold">100,000 تومان</span></td>
+                                        <td>کارت بانکی</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230514-002</span></td>
+                                        <td>پنل وب سرور</td>
+                                        <td>1402/05/14</td>
+                                        <td><span class="fw-bold">50,000 تومان</span></td>
+                                        <td>زرین‌پال</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230513-003</span></td>
+                                        <td>پنل ایمیل سرور</td>
+                                        <td>1402/05/13</td>
+                                        <td><span class="fw-bold">25,000 تومان</span></td>
+                                        <td>کارت بانکی</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230512-004</span></td>
+                                        <td>پنل CDN</td>
+                                        <td>1402/05/12</td>
+                                        <td><span class="fw-bold">75,000 تومان</span></td>
+                                        <td>زرین‌پال</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230511-005</span></td>
+                                        <td>پنل بکاپ</td>
+                                        <td>1402/05/11</td>
+                                        <td><span class="fw-bold">30,000 تومان</span></td>
+                                        <td>کارت بانکی</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fw-bold">#CHG-20230510-006</span></td>
+                                        <td>پنل امنیتی</td>
+                                        <td>1402/05/10</td>
+                                        <td><span class="fw-bold">60,000 تومان</span></td>
+                                        <td>زرین‌پال</td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Charge Panel Modal -->
+    <div class="modal fade" id="chargePanelModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">شارژ پنل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-4">
+                            <label class="form-label">انتخاب پنل</label>
+                            <select class="form-select rounded-3">
+                                <option>انتخاب پنل برای شارژ</option>
+                                <option>پنل دیتابیس اصلی</option>
+                                <option>پنل وب سرور</option>
+                                <option>پنل ایمیل سرور</option>
+                                <option>پنل امنیتی</option>
+                                <option>پنل CDN</option>
+                                <option>پنل بکاپ</option>
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">مبلغ شارژ (تومان)</label>
+                                <input type="number" class="form-control rounded-3" placeholder="مبلغ شارژ را وارد کنید" value="50000">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">روش پرداخت</label>
+                                <select class="form-select rounded-3">
+                                    <option>کارت بانکی</option>
+                                    <option>زرین‌پال</option>
+                                    <option>درگاه پرداخت آنلاین</option>
+                                    <option>انتقال بانکی</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">توضیحات (اختیاری)</label>
+                            <textarea class="form-control rounded-3" rows="3" placeholder="توضیحات مربوط به شارژ"></textarea>
+                        </div>
+                        
+                        <div class="border rounded-3 p-4 mb-4">
+                            <h6 class="fw-bold mb-3">خلاصه شارژ</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>مبلغ شارژ:</span>
+                                <span class="fw-bold">50,000 تومان</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>کارمزد تراکنش:</span>
+                                <span class="fw-bold">500 تومان</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                                <span>مبلغ قابل پرداخت:</span>
+                                <span class="fw-bold fs-5 text-primary">50,500 تومان</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="autoCharge" checked>
+                            <label class="form-check-label" for="autoCharge">فعال‌سازی شارژ خودکار هنگام کم شدن اعتبار</label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notifications" checked>
+                            <label class="form-check-label" for="notifications">دریافت اعلان هنگام شارژ موفق</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary-custom">پرداخت و شارژ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn-panel').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('plus')) {
+                    // Charge panel modal will open automatically
+                } else if (action.includes('eye')) {
+                    alert('مشاهده جزئیات پنل');
+                } else if (action.includes('history')) {
+                    alert('مشاهده تاریخچه شارژ پنل');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

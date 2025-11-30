@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - تراکنش‌ها</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Transactions Table */
+        .transactions-table {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+        }
+        
+        .table-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-filters {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            background: white;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: var(--text-light);
+            border-top: none;
+            padding: 15px 20px;
+        }
+        
+        .table td {
+            padding: 15px 20px;
+            vertical-align: middle;
+        }
+        
+        .transaction-id {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .badge-failed {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .badge-pending {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        .badge-refunded {
+            background: rgba(149, 165, 166, 0.15);
+            color: #95a5a6;
+        }
+        
+        .amount-positive {
+            color: #2ecc71;
+            font-weight: 700;
+        }
+        
+        .amount-negative {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+            margin: 0 3px;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .pagination-custom {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-item-custom {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .page-item-custom:hover, .page-item-custom.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bg-primary-light {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.15) 0%, rgba(42, 157, 143, 0.15) 100%);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            color: #2ecc71;
+        }
+        
+        .bg-warning-light {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            color: #f39c12;
+        }
+        
+        .bg-info-light {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            color: #3498db;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        /* Transaction Details Modal */
+        .transaction-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .bg-visa {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .bg-mastercard {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .bg-zarinpal {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت تراکنش‌ها</h2>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-primary-light">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع تراکنش‌ها</h6>
+                                    <h3 class="card-value">2,458</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 15% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-success-light">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h6 class="card-title">تراکنش‌های موفق</h6>
+                                    <h3 class="card-value">2,134</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 12% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-warning-light">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <h6 class="card-title">درآمد کل (تومان)</h6>
+                                    <h3 class="card-value">48.2M</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 18% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-info-light">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <h6 class="card-title">نرخ موفقیت</h6>
+                                    <h3 class="card-value">87%</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 2% کاهش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transactions Table -->
+                    <div class="transactions-table">
+                        <div class="table-header">
+                            <h5 class="mb-0">لیست تراکنش‌ها</h5>
+                            <div class="table-filters">
+                                <select class="filter-select">
+                                    <option>همه وضعیت‌ها</option>
+                                    <option>موفق</option>
+                                    <option>ناموفق</option>
+                                    <option>در انتظار</option>
+                                    <option>برگشت داده شده</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>آخرین تراکنش‌ها</option>
+                                    <option>قدیمی‌ترین</option>
+                                    <option>بالاترین مبلغ</option>
+                                    <option>پایین‌ترین مبلغ</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>همه روش‌های پرداخت</option>
+                                    <option>کارت بانکی</option>
+                                    <option>زرین‌پال</option>
+                                    <option>پرداخت در محل</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>شماره تراکنش</th>
+                                        <th>مشتری</th>
+                                        <th>تاریخ و ساعت</th>
+                                        <th>روش پرداخت</th>
+                                        <th>مبلغ</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230515-001</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">علی محمدی</div>
+                                                    <div class="text-muted small">#ORD-1001</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/15<br><span class="text-muted small">14:30</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-visa">
+                                                    <i class="fab fa-cc-visa"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">کارت بانکی</div>
+                                                    <div class="text-muted small">Visa ****1234</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">1,250,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230514-002</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/3498db/ffffff?text=M" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">مریم رضایی</div>
+                                                    <div class="text-muted small">#ORD-1002</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/14<br><span class="text-muted small">16:45</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-zarinpal">
+                                                    <i class="fas fa-wallet"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">زرین‌پال</div>
+                                                    <div class="text-muted small">ایمیل: maryam@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">850,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230514-003</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/f39c12/ffffff?text=H" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">حسام کریمی</div>
+                                                    <div class="text-muted small">#ORD-1003</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/14<br><span class="text-muted small">12:15</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-mastercard">
+                                                    <i class="fab fa-cc-mastercard"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">کارت بانکی</div>
+                                                    <div class="text-muted small">Mastercard ****5678</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">2,100,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230513-004</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/e74c3c/ffffff?text=Z" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">زهرا احمدی</div>
+                                                    <div class="text-muted small">#ORD-1004</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/13<br><span class="text-muted small">18:20</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-visa">
+                                                    <i class="fab fa-cc-visa"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">کارت بانکی</div>
+                                                    <div class="text-muted small">Visa ****9012</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-negative">450,000 تومان</span></td>
+                                        <td><span class="status-badge badge-failed">ناموفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه" disabled><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230512-005</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/9b59b6/ffffff?text=M" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">مهدی نوری</div>
+                                                    <div class="text-muted small">#ORD-1005</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/12<br><span class="text-muted small">10:30</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-zarinpal">
+                                                    <i class="fas fa-wallet"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">زرین‌پال</div>
+                                                    <div class="text-muted small">ایمیل: mehdi@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">1,750,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230511-006</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/1abc9c/ffffff?text=F" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">فاطمه حسینی</div>
+                                                    <div class="text-muted small">#ORD-1006</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/11<br><span class="text-muted small">15:45</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-mastercard">
+                                                    <i class="fab fa-cc-mastercard"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">کارت بانکی</div>
+                                                    <div class="text-muted small">Mastercard ****3456</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">980,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230510-007</span></td>
+                                        <td>
+                                            <div class="customer-info">
+                                                <img src="https://placehold.co/40x40/34495e/ffffff?text=R" class="customer-avatar" alt="Customer">
+                                                <div>
+                                                    <div class="fw-bold">رضا محمدی</div>
+                                                    <div class="text-muted small">#ORD-1007</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1402/05/10<br><span class="text-muted small">09:15</span></td>
+                                        <td>
+                                            <div class="payment-method">
+                                                <div class="payment-icon bg-visa">
+                                                    <i class="fab fa-cc-visa"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">کارت بانکی</div>
+                                                    <div class="text-muted small">Visa ****7890</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="amount-positive">1,320,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده" data-bs-toggle="modal" data-bs-target="#transactionDetailsModal"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="برگشت وجه"><i class="fas fa-undo"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination-custom">
+                            <div class="page-item-custom active">1</div>
+                            <div class="page-item-custom">2</div>
+                            <div class="page-item-custom">3</div>
+                            <div class="page-item-custom">4</div>
+                            <div class="page-item-custom">5</div>
+                            <div class="page-item-custom">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Transaction Details Modal -->
+    <div class="modal fade" id="transactionDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <div class="transaction-details-header">
+                        <h5 class="modal-title">جزئیات تراکنش TRX-20230515-001</h5>
+                        <span class="status-badge badge-success">موفق</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3">اطلاعات مشتری</h6>
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://placehold.co/50x50/4ecca3/ffffff?text=A" class="customer-avatar me-3" alt="Customer">
+                                <div>
+                                    <div class="fw-bold">علی محمدی</div>
+                                    <div class="text-muted small">ali.mohammadi@example.com</div>
+                                    <div class="text-muted small">09123456789</div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="fw-bold mb-2">شماره سفارش:</div>
+                                <div class="text-muted">#ORD-1001</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3">اطلاعات تراکنش</h6>
+                            <div class="mb-2">
+                                <span class="text-muted">تاریخ و ساعت:</span>
+                                <span class="fw-bold me-2">1402/05/15 - 14:30</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted">روش پرداخت:</span>
+                                <span class="fw-bold me-2">کارت بانکی (Visa)</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted">شماره کارت:</span>
+                                <span class="fw-bold me-2">**** **** **** 1234</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted">کد پیگیری بانک:</span>
+                                <span class="fw-bold me-2">BANK-789456123</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3">اطلاعات مالی</h6>
+                    <div class="border rounded-3 p-4 mb-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>مبلغ تراکنش:</span>
+                            <span class="fw-bold">1,250,000 تومان</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>کارمزد تراکنش:</span>
+                            <span class="fw-bold">25,000 تومان</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>مالیات:</span>
+                            <span class="fw-bold">125,000 تومان</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-top pt-3 mt-3">
+                            <span>مبلغ خالص دریافتی:</span>
+                            <span class="fw-bold fs-5 text-success">1,100,000 تومان</span>
+                        </div>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3">محصولات سفارش</h6>
+                    <div class="border rounded-3 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/60x60/4ecca3/ffffff?text=لپ تاپ" class="me-3" style="width: 60px; height: 60px; border-radius: 10px;" alt="Product">
+                                <div>
+                                    <div class="fw-bold">لپ تاپ ایسوس مدل VivoBook</div>
+                                    <div class="text-muted small">تعداد: 1 | قیمت واحد: 1,250,000 تومان</div>
+                                </div>
+                            </div>
+                            <div class="fw-bold">1,250,000 تومان</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary-custom">برگشت وجه</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('eye')) {
+                    // Transaction details modal will open automatically
+                } else if (action.includes('undo')) {
+                    if (confirm('آیا از برگشت وجه این تراکنش اطمینان دارید؟')) {
+                        alert('برگشت وجه انجام شد');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

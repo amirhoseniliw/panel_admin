@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - مالی</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Financial Summary Cards */
+        .financial-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .financial-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .financial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+        
+        .bg-icon-1 {
+            background: rgba(78, 204, 163, 0.15);
+            color: var(--primary-color);
+        }
+        
+        .bg-icon-2 {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .bg-icon-3 {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+        
+        .bg-icon-4 {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+        }
+        
+        .card-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .card-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .amount.positive {
+            color: #2ecc71;
+        }
+        
+        .amount.negative {
+            color: #e74c3c;
+        }
+        
+        .trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .trend.up {
+            color: #2ecc71;
+        }
+        
+        .trend.down {
+            color: #e74c3c;
+        }
+        
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            border: 1px solid var(--border-color);
+        }
+        
+        .chart-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chart-container {
+            padding: 20px;
+            height: 300px;
+        }
+        
+        /* Financial Table */
+        .financial-table {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            border: 1px solid var(--border-color);
+        }
+        
+        .table-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-filters {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            background: white;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: var(--text-light);
+            border-top: none;
+            padding: 15px 20px;
+        }
+        
+        .table td {
+            padding: 15px 20px;
+            vertical-align: middle;
+        }
+        
+        .transaction-id {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .badge-pending {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+        
+        .badge-failed {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .amount-table {
+            font-weight: 700;
+        }
+        
+        .amount-table.positive {
+            color: #2ecc71;
+        }
+        
+        .amount-table.negative {
+            color: #e74c3c;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+            margin: 0 3px;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Pagination */
+        .pagination-custom {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-item-custom {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .page-item-custom:hover, .page-item-custom.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .financial-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت مالی</h2>
+                        <button class="btn" style="background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600;">
+                            <i class="fas fa-download me-2"></i>گزارش مالی
+                        </button>
+                    </div>
+
+                    <!-- Financial Summary Cards -->
+                    <div class="financial-cards">
+                        <div class="financial-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-icon-1">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">درآمد کل</h5>
+                                    <div class="card-subtitle">ماه جاری</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="amount positive">48,250,000 تومان</div>
+                                <div class="trend up">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    15% افزایش نسبت به ماه قبل
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="financial-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-icon-2">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">فروش کل</h5>
+                                    <div class="card-subtitle">ماه جاری</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="amount">1,248 سفارش</div>
+                                <div class="trend up">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    12% افزایش نسبت به ماه قبل
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="financial-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-icon-3">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">تراکنش‌ها</h5>
+                                    <div class="card-subtitle">موفقیت 92%</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="amount">2,458 تراکنش</div>
+                                <div class="trend up">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    8% افزایش نسبت به ماه قبل
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="financial-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-icon-4">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">میانگین سفارش</h5>
+                                    <div class="card-subtitle">در هر خرید</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="amount positive">38,650 تومان</div>
+                                <div class="trend down">
+                                    <i class="fas fa-arrow-down me-1"></i>
+                                    3% کاهش نسبت به ماه قبل
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5 class="mb-0">درآمد ماهانه</h5>
+                                <select class="filter-select">
+                                    <option>12 ماه گذشته</option>
+                                    <option>6 ماه گذشته</option>
+                                    <option>3 ماه گذشته</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5 class="mb-0">توزیع فروش</h5>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Table -->
+                    <div class="financial-table">
+                        <div class="table-header">
+                            <h5 class="mb-0">تراکنش‌های اخیر</h5>
+                            <div class="table-filters">
+                                <select class="filter-select">
+                                    <option>همه وضعیت‌ها</option>
+                                    <option>موفق</option>
+                                    <option>در انتظار</option>
+                                    <option>ناموفق</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>آخرین تراکنش‌ها</option>
+                                    <option>قدیمی‌ترین</option>
+                                    <option>بالاترین مبلغ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>شماره تراکنش</th>
+                                        <th>تاریخ</th>
+                                        <th>شرح</th>
+                                        <th>درآمد</th>
+                                        <th>هزینه</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230515-001</span></td>
+                                        <td>1402/05/15</td>
+                                        <td>سفارش #ORD-1001 - لپ تاپ ایسوس</td>
+                                        <td><span class="amount-table positive">1,250,000 تومان</span></td>
+                                        <td><span class="amount-table">25,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230514-002</span></td>
+                                        <td>1402/05/14</td>
+                                        <td>سفارش #ORD-1002 - گوشی سامسونگ</td>
+                                        <td><span class="amount-table positive">24,900,000 تومان</span></td>
+                                        <td><span class="amount-table">498,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230514-003</span></td>
+                                        <td>1402/05/14</td>
+                                        <td>سفارش #ORD-1003 - پیراهن مردانه</td>
+                                        <td><span class="amount-table positive">450,000 تومان</span></td>
+                                        <td><span class="amount-table">9,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230513-004</span></td>
+                                        <td>1402/05/13</td>
+                                        <td>شارژ پنل وب سرور</td>
+                                        <td><span class="amount-table">-</span></td>
+                                        <td><span class="amount-table negative">50,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230512-005</span></td>
+                                        <td>1402/05/12</td>
+                                        <td>سفارش #ORD-1005 - کتاب پایتون</td>
+                                        <td><span class="amount-table positive">180,000 تومان</span></td>
+                                        <td><span class="amount-table">3,600 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230511-006</span></td>
+                                        <td>1402/05/11</td>
+                                        <td>بازگشت وجه سفارش #ORD-1004</td>
+                                        <td><span class="amount-table">-</span></td>
+                                        <td><span class="amount-table negative">450,000 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TRX-20230510-007</span></td>
+                                        <td>1402/05/10</td>
+                                        <td>سفارش #ORD-1007 - خودروی کنترل از راه دور</td>
+                                        <td><span class="amount-table positive">320,000 تومان</span></td>
+                                        <td><span class="amount-table">6,400 تومان</span></td>
+                                        <td><span class="status-badge badge-success">موفق</span></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="action-btn" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn" title="چاپ"><i class="fas fa-print"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination-custom">
+                            <div class="page-item-custom active">1</div>
+                            <div class="page-item-custom">2</div>
+                            <div class="page-item-custom">3</div>
+                            <div class="page-item-custom">4</div>
+                            <div class="page-item-custom">5</div>
+                            <div class="page-item-custom">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('eye')) {
+                    alert('مشاهده جزئیات تراکنش');
+                } else if (action.includes('print')) {
+                    alert('چاپ رسید تراکنش');
+                }
+            });
+        });
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+                    datasets: [{
+                        label: 'درآمد (تومان)',
+                        data: [35000000, 42000000, 38000000, 45000000, 52000000, 48000000, 55000000, 62000000, 58000000, 65000000, 72000000, 68000000],
+                        borderColor: '#4ecca3',
+                        backgroundColor: 'rgba(78, 204, 163, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toFixed(0) + 'M';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sales Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(salesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['لپ تاپ و کامپیوتر', 'موبایل و تبلت', 'پوشاک و مد', 'کتاب و لوازم التحریر', 'اسباب بازی', 'خانه و آشپزخانه'],
+                    datasets: [{
+                        data: [35, 25, 15, 10, 8, 7],
+                        backgroundColor: [
+                            '#4ecca3',
+                            '#3498db',
+                            '#f1c40f',
+                            '#9b59b6',
+                            '#e74c3c',
+                            '#1abc9c'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 20
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

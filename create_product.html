@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - افزودن محصول جدید</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        /* Product Form */
+        .product-form {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-left: 10px;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            background: #f8fafc;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 204, 163, 0.25);
+        }
+        
+        .form-control-file {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+        
+        .form-control-file:hover {
+            border-color: var(--primary-color);
+            background: rgba(78, 204, 163, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .browse-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .image-preview {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .preview-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+        
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .tag-input-field {
+            border: none;
+            background: transparent;
+            flex: 1;
+            padding: 5px;
+            outline: none;
+        }
+        
+        .variant-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        
+        .variant-input {
+            flex: 1;
+        }
+        
+        .add-variant-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .add-variant-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .remove-variant-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .remove-variant-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .form-section {
+                padding: 20px 15px;
+            }
+            
+            .variant-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-group .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>افزودن محصول جدید</h2>
+                        <div>
+                            <button class="btn btn-outline-custom me-2">
+                                <i class="fas fa-times me-2"></i>لغو
+                            </button>
+                            <button class="btn btn-primary-custom">
+                                <i class="fas fa-save me-2"></i>ذخیره محصول
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Form -->
+                    <div class="product-form">
+                        <form>
+                            <!-- Basic Information -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-info-circle"></i> اطلاعات پایه</h4>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">نام محصول</label>
+                                        <input type="text" class="form-control" placeholder="نام محصول را وارد کنید">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">کد محصول</label>
+                                        <input type="text" class="form-control" placeholder="کد محصول (اختیاری)">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">دسته‌بندی</label>
+                                        <select class="form-select">
+                                            <option>انتخاب دسته‌بندی</option>
+                                            <option>لپ تاپ و کامپیوتر</option>
+                                            <option>موبایل و تبلت</option>
+                                            <option>پوشاک و مد</option>
+                                            <option>خانه و آشپزخانه</option>
+                                            <option>کتاب و لوازم التحریر</option>
+                                            <option>اسباب بازی و بازی</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">برند</label>
+                                        <select class="form-select">
+                                            <option>انتخاب برند</option>
+                                            <option>ایسوس</option>
+                                            <option>سامسونگ</option>
+                                            <option>اپل</option>
+                                            <option>شیائومی</option>
+                                            <option>هوآوی</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">توضیحات کوتاه</label>
+                                    <textarea class="form-control" rows="3" placeholder="توضیحات کوتاه محصول"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">توضیحات کامل</label>
+                                    <textarea class="form-control" rows="6" placeholder="توضیحات کامل محصول"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Pricing -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-tag"></i> قیمت‌گذاری</h4>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">قیمت اصلی (تومان)</label>
+                                        <input type="number" class="form-control" placeholder="قیمت اصلی محصول">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">قیمت تخفیف‌دار (تومان)</label>
+                                        <input type="number" class="form-control" placeholder="قیمت با تخفیف (اختیاری)">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">درصد تخفیف (%)</label>
+                                        <input type="number" class="form-control" placeholder="درصد تخفیف" min="0" max="100">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">هزینه ارسال (تومان)</label>
+                                        <input type="number" class="form-control" placeholder="هزینه ارسال" value="0">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">مالیات (%)</label>
+                                        <input type="number" class="form-control" placeholder="درصد مالیات" value="9" min="0" max="100">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">وزن (گرم)</label>
+                                        <input type="number" class="form-control" placeholder="وزن محصول">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Inventory -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-warehouse"></i> موجودی و تنوع</h4>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">تعداد موجودی</label>
+                                        <input type="number" class="form-control" placeholder="تعداد موجودی" value="0">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">حداقل موجودی</label>
+                                        <input type="number" class="form-control" placeholder="حداقل موجودی" value="5">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">وضعیت موجودی</label>
+                                        <select class="form-select">
+                                            <option>در انبار</option>
+                                            <option>تماس بگیرید</option>
+                                            <option>ناموجود</option>
+                                            <option>پیش‌سفارش</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">تنوع محصول</label>
+                                    <div class="variant-row">
+                                        <div class="variant-input">
+                                            <input type="text" class="form-control" placeholder="رنگ، سایز، یا ویژگی">
+                                        </div>
+                                        <div class="variant-input">
+                                            <input type="number" class="form-control" placeholder="قیمت اضافی (تومان)">
+                                        </div>
+                                        <div class="variant-input">
+                                            <input type="number" class="form-control" placeholder="تعداد موجودی">
+                                        </div>
+                                        <button class="add-variant-btn" type="button">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="variant-row">
+                                        <div class="variant-input">
+                                            <input type="text" class="form-control" placeholder="قرمز" value="قرمز">
+                                        </div>
+                                        <div class="variant-input">
+                                            <input type="number" class="form-control" placeholder="قیمت اضافی" value="0">
+                                        </div>
+                                        <div class="variant-input">
+                                            <input type="number" class="form-control" placeholder="تعداد موجودی" value="10">
+                                        </div>
+                                        <button class="remove-variant-btn" type="button">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Images -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-images"></i> تصاویر محصول</h4>
+                                <div class="form-control-file" id="dropZone">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <h5 class="upload-text">تصاویر محصول را اینجا بکشید یا کلیک کنید</h5>
+                                    <p class="text-muted mb-3">فرمت‌های پشتیبانی شده: JPG, PNG, GIF - حداکثر حجم: 5MB</p>
+                                    <button class="browse-btn" type="button">انتخاب تصاویر</button>
+                                    <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                                </div>
+                                <div class="image-preview-container">
+                                    <div class="image-preview">
+                                        <img src="https://placehold.co/150x120/4ecca3/ffffff?text=تصویر+اصلی" class="preview-img" alt="Preview">
+                                        <div class="remove-image">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                    </div>
+                                    <div class="image-preview">
+                                        <img src="https://placehold.co/150x120/3498db/ffffff?text=تصویر+2" class="preview-img" alt="Preview">
+                                        <div class="remove-image">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                    </div>
+                                    <div class="image-preview">
+                                        <img src="https://placehold.co/150x120/f39c12/ffffff?text=تصویر+3" class="preview-img" alt="Preview">
+                                        <div class="remove-image">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Specifications -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-list"></i> مشخصات فنی</h4>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">ویژگی جدید</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="نام ویژگی">
+                                            <input type="text" class="form-control" placeholder="مقدار ویژگی">
+                                            <button class="btn btn-outline-primary" type="button">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>نام ویژگی</th>
+                                                <th>مقدار</th>
+                                                <th>عملیات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>پردازنده</td>
+                                                <td>Intel Core i7-11800H</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>حافظه رم</td>
+                                                <td>16GB DDR4</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>حافظه ذخیره‌سازی</td>
+                                                <td>512GB SSD NVMe</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- SEO -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-search"></i> سئو</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">عنوان صفحه (SEO Title)</label>
+                                    <input type="text" class="form-control" placeholder="عنوان صفحه برای موتورهای جستجو">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">توضیحات متا (Meta Description)</label>
+                                    <textarea class="form-control" rows="3" placeholder="توضیحات کوتاه برای موتورهای جستجو"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">کلمات کلیدی</label>
+                                    <div class="tag-input">
+                                        <span class="tag">
+                                            لپ تاپ
+                                            <span class="tag-remove">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </span>
+                                        <span class="tag">
+                                            ایسوس
+                                            <span class="tag-remove">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </span>
+                                        <span class="tag">
+                                            کامپیوتر
+                                            <span class="tag-remove">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </span>
+                                        <input type="text" class="tag-input-field" placeholder="کلمه کلیدی جدید...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings -->
+                            <div class="form-section">
+                                <h4 class="section-title"><i class="fas fa-cog"></i> تنظیمات</h4>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">وضعیت انتشار</label>
+                                        <select class="form-select">
+                                            <option>منتشر شده</option>
+                                            <option>پیش‌نویس</option>
+                                            <option>بررسی شده</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">قابلیت نظردهی</label>
+                                        <select class="form-select">
+                                            <option>فعال</option>
+                                            <option>غیرفعال</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">نمایش در صفحه اصلی</label>
+                                        <select class="form-select">
+                                            <option>خیر</option>
+                                            <option>بله</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="featuredProduct" checked>
+                                    <label class="form-check-label" for="featuredProduct">محصول ویژه</label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="newProduct" checked>
+                                    <label class="form-check-label" for="newProduct">محصول جدید</label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="onSale">
+                                    <label class="form-check-label" for="onSale">در تخفیف</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn btn-outline-custom" type="button">
+                                    <i class="fas fa-times me-2"></i>لغو
+                                </button>
+                                <button class="btn btn-primary-custom" type="button">
+                                    <i class="fas fa-save me-2"></i>ذخیره محصول
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // File Upload
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const files = Array.from(this.files);
+                files.forEach(file => {
+                    console.log(`فایل انتخاب شد: ${file.name}`);
+                });
+                alert(`${files.length} تصویر انتخاب شد`);
+            }
+        });
+
+        // Remove Image
+        document.querySelectorAll('.remove-image').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
+                    this.closest('.image-preview').remove();
+                }
+            });
+        });
+
+        // Tag Input
+        const tagInputField = document.querySelector('.tag-input-field');
+        tagInputField.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tagText = this.value.trim();
+                if (tagText) {
+                    const tag = document.createElement('span');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${tagText}
+                        <span class="tag-remove">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    `;
+                    this.parentNode.insertBefore(tag, this);
+                    this.value = '';
+                    
+                    // Add remove functionality to new tag
+                    tag.querySelector('.tag-remove').addEventListener('click', function() {
+                        this.parentNode.remove();
+                    });
+                }
+            }
+        });
+
+        // Remove existing tags
+        document.querySelectorAll('.tag-remove').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentNode.remove();
+            });
+        });
+
+        // Add/Remove Variants
+        document.querySelector('.add-variant-btn').addEventListener('click', function() {
+            const variantRow = document.createElement('div');
+            variantRow.className = 'variant-row';
+            variantRow.innerHTML = `
+                <div class="variant-input">
+                    <input type="text" class="form-control" placeholder="رنگ، سایز، یا ویژگی">
+                </div>
+                <div class="variant-input">
+                    <input type="number" class="form-control" placeholder="قیمت اضافی (تومان)">
+                </div>
+                <div class="variant-input">
+                    <input type="number" class="form-control" placeholder="تعداد موجودی">
+                </div>
+                <button class="remove-variant-btn" type="button">
+                    <i class="fas fa-minus"></i>
+                </button>
+            `;
+            this.parentNode.parentNode.appendChild(variantRow);
+            
+            // Add event listener to new remove button
+            variantRow.querySelector('.remove-variant-btn').addEventListener('click', function() {
+                if (document.querySelectorAll('.variant-row').length > 1) {
+                    this.parentNode.remove();
+                } else {
+                    alert('حداقل یک تنوع باید وجود داشته باشد');
+                }
+            });
+        });
+
+        document.querySelectorAll('.remove-variant-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (document.querySelectorAll('.variant-row').length > 1) {
+                    this.parentNode.remove();
+                } else {
+                    alert('حداقل یک تنوع باید وجود داشته باشد');
+                }
+            });
+        });
+
+        // Form Submission
+        document.querySelector('.btn-primary-custom').addEventListener('click', function() {
+            alert('محصول با موفقیت ذخیره شد');
+        });
+
+        document.querySelector('.btn-outline-custom').addEventListener('click', function() {
+            if (confirm('آیا از لغو افزودن محصول جدید اطمینان دارید؟')) {
+                alert('عملیات لغو شد');
+            }
+        });
+    </script>
+</body>
+</html>

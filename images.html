@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - گالری تصاویر محصول</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        /* Product Info */
+        .product-info {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .product-image-thumb {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-left: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .product-details {
+            flex: 1;
+        }
+        
+        .product-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .product-category {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .product-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .meta-item i {
+            margin-left: 8px;
+            color: var(--primary-color);
+        }
+        
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-left: 10px;
+            color: var(--primary-color);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 50px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f8fafc;
+            margin-bottom: 25px;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(78, 204, 163, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .browse-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .file-info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            color: var(--text-light);
+        }
+        
+        .info-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .image-container {
+            position: relative;
+            height: 180px;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        .overlay-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .overlay-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .overlay-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .image-info {
+            padding: 15px;
+        }
+        
+        .image-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .image-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .image-size {
+            color: var(--text-light);
+        }
+        
+        .image-dimensions {
+            color: var(--text-light);
+        }
+        
+        /* Featured Badge */
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        /* Drag and Drop */
+        .drag-over {
+            border-color: var(--primary-color) !important;
+            background: rgba(78, 204, 163, 0.1) !important;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .product-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .product-image-thumb {
+                margin: 0 0 15px 0;
+            }
+            
+            .product-meta {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .image-container {
+                height: 120px;
+            }
+            
+            .overlay-actions {
+                gap: 10px;
+            }
+            
+            .overlay-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-images"></i>
+                            <span class="menu-text">گالری تصاویر</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>گالری تصاویر محصول</h2>
+                        <div>
+                            <button class="btn btn-outline-custom me-2">
+                                <i class="fas fa-times me-2"></i>لغو
+                            </button>
+                            <button class="btn btn-primary-custom">
+                                <i class="fas fa-save me-2"></i>ذخیره تغییرات
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <img src="https://placehold.co/80x80/4ecca3/ffffff?text=لپ تاپ" class="product-image-thumb" alt="Product">
+                        <div class="product-details">
+                            <div class="product-name">لپ تاپ ایسوس مدل VivoBook Pro</div>
+                            <div class="product-category">لپ تاپ و کامپیوتر > لپ تاپ</div>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-barcode"></i>
+                                    <span>کد محصول: LP-2023-VB156</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i>
+                                    <span>قیمت: 12,500,000 تومان</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-warehouse"></i>
+                                    <span>موجودی: 15 عدد</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <h4 class="section-title"><i class="fas fa-cloud-upload-alt"></i> آپلود تصاویر جدید</h4>
+                        <div class="upload-area" id="dropZone">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">تصاویر محصول را اینجا بکشید یا کلیک کنید</div>
+                            <p class="text-muted mb-4">فرمت‌های پشتیبانی شده: JPG, PNG, GIF - حداکثر حجم: 5MB</p>
+                            <button class="browse-btn" type="button">انتخاب تصاویر</button>
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div class="file-info">
+                            <div class="info-item">
+                                <span class="info-label">تعداد فایل‌های انتخاب شده:</span>
+                                <span class="info-value" id="fileCount">0 فایل</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">مجموع حجم فایل‌ها:</span>
+                                <span class="info-value" id="totalSize">0 MB</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">فرمت‌های پشتیبانی شده:</span>
+                                <span class="info-value">JPG, PNG, GIF</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button class="btn btn-primary-custom" id="uploadBtn">
+                                <i class="fas fa-upload me-2"></i>آپلود تصاویر
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Grid -->
+                    <h4 class="section-title"><i class="fas fa-th-large"></i> گالری تصاویر فعلی</h4>
+                    <div class="gallery-grid">
+                        <!-- Gallery Item 1 - Featured -->
+                        <div class="gallery-item">
+                            <div class="featured-badge">تصویر اصلی</div>
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/4ecca3/ffffff?text=تصویر+اصلی" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-اصلی-محصول.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">2.4 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 2 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/3498db/ffffff?text=تصویر+2" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-2.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">1.8 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 3 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/f39c12/ffffff?text=تصویر+3" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-3.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">2.1 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 4 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/e74c3c/ffffff?text=تصویر+4" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-4.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">1.9 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 5 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/9b59b6/ffffff?text=تصویر+5" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-5.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">2.3 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 6 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/1abc9c/ffffff?text=تصویر+6" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-6.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">2.0 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 7 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/34495e/ffffff?text=تصویر+7" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-7.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">1.7 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Item 8 -->
+                        <div class="gallery-item">
+                            <div class="image-container">
+                                <img src="https://placehold.co/300x300/2c3e50/ffffff?text=تصویر+8" class="gallery-image" alt="Gallery Image">
+                                <div class="image-overlay">
+                                    <div class="overlay-actions">
+                                        <button class="overlay-btn" title="مشاهده">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="تنظیم به عنوان اصلی">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                        <button class="overlay-btn" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-info">
+                                <div class="image-name">تصویر-محصول-8.jpg</div>
+                                <div class="image-meta">
+                                    <span class="image-size">2.2 MB</span>
+                                    <span class="image-dimensions">1920×1080</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // File Upload
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileCount = document.getElementById('fileCount');
+        const totalSize = document.getElementById('totalSize');
+        const uploadBtn = document.getElementById('uploadBtn');
+        
+        // Click on drop zone to select files
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            updateFileInfo(this.files);
+        });
+        
+        // Drag and drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropZone.classList.add('drag-over');
+        }
+        
+        function unhighlight() {
+            dropZone.classList.remove('drag-over');
+        }
+        
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            updateFileInfo(files);
+        }
+        
+        // Update file information
+        function updateFileInfo(files) {
+            let count = files.length;
+            let size = 0;
+            
+            for (let i = 0; i < files.length; i++) {
+                size += files[i].size;
+            }
+            
+            // Convert bytes to MB
+            const sizeInMB = (size / (1024 * 1024)).toFixed(2);
+            
+            fileCount.textContent = `${count} فایل`;
+            totalSize.textContent = `${sizeInMB} MB`;
+        }
+        
+        // Upload button
+        uploadBtn.addEventListener('click', function() {
+            if (fileInput.files.length > 0) {
+                alert(`${fileInput.files.length} تصویر با موفقیت آپلود شد`);
+                // Here you would typically send the files to server
+            } else {
+                alert('لطفاً ابتدا تصاویر را انتخاب کنید');
+            }
+        });
+
+        // Gallery Actions
+        document.querySelectorAll('.overlay-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.querySelector('i').className;
+                
+                if (action.includes('eye')) {
+                    // View image
+                    const imgSrc = this.closest('.gallery-item').querySelector('.gallery-image').src;
+                    alert('مشاهده تصویر: ' + imgSrc);
+                } else if (action.includes('star')) {
+                    // Set as featured
+                    const imageName = this.closest('.gallery-item').querySelector('.image-name').textContent;
+                    if (confirm(`آیا از تنظیم "${imageName}" به عنوان تصویر اصلی اطمینان دارید؟`)) {
+                        // Remove previous featured badge
+                        document.querySelectorAll('.featured-badge').forEach(badge => {
+                            badge.remove();
+                        });
+                        
+                        // Add new featured badge
+                        const galleryItem = this.closest('.gallery-item');
+                        const featuredBadge = document.createElement('div');
+                        featuredBadge.className = 'featured-badge';
+                        featuredBadge.textContent = 'تصویر اصلی';
+                        galleryItem.prepend(featuredBadge);
+                        
+                        alert('تصویر اصلی با موفقیت تغییر کرد');
+                    }
+                } else if (action.includes('trash')) {
+                    // Delete image
+                    const imageName = this.closest('.gallery-item').querySelector('.image-name').textContent;
+                    if (confirm(`آیا از حذف "${imageName}" اطمینان دارید؟`)) {
+                        this.closest('.gallery-item').remove();
+                        alert('تصویر با موفقیت حذف شد');
+                    }
+                }
+            });
+        });
+
+        // Save Changes
+        document.querySelector('.btn-primary-custom').addEventListener('click', function() {
+            alert('تغییرات گالری با موفقیت ذخیره شد');
+        });
+
+        // Cancel
+        document.querySelector('.btn-outline-custom').addEventListener('click', function() {
+            if (confirm('آیا از لغو تغییرات اطمینان دارید؟')) {
+                alert('عملیات لغو شد');
+            }
+        });
+    </script>
+</body>
+</html>

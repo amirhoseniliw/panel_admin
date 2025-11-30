@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - تنظیمات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+        
+        /* Settings Tabs */
+        .settings-tabs {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            padding: 15px 25px;
+            color: var(--text-light);
+            font-weight: 500;
+            border-radius: 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--text-dark);
+        }
+        
+        .tab-content {
+            padding: 30px;
+        }
+        
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            background: #f8fafc;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 204, 163, 0.25);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(78, 204, 163, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .color-picker {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .bg-icon-1 {
+            background: rgba(78, 204, 163, 0.15);
+            color: var(--primary-color);
+        }
+        
+        .bg-icon-2 {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .bg-icon-3 {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .tab-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>تنظیمات سیستم</h2>
+                    </div>
+
+                    <!-- Settings Tabs -->
+                    <div class="settings-tabs">
+                        <ul class="nav nav-tabs" id="settingsTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">عمومی</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#appearance" type="button" role="tab">ظاهر</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">اعلان‌ها</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">امنیت</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab">پرداخت</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="settingsTabContent">
+                            <!-- General Tab -->
+                            <div class="tab-pane fade show active" id="general" role="tabpanel">
+                                <div class="settings-section">
+                                    <h5 class="section-title">اطلاعات سایت</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">نام سایت</label>
+                                            <input type="text" class="form-control" value="فروشگاه آنلاین">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">عنوان سایت</label>
+                                            <input type="text" class="form-control" value="فروشگاه آنلاین - بهترین محصولات با بهترین قیمت">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">توضیحات سایت</label>
+                                        <textarea class="form-control" rows="3">فروشگاه آنلاین با بهترین محصولات و قیمت‌های مناسب. خرید آسان و تحویل سریع.</textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">ایمیل تماس</label>
+                                            <input type="email" class="form-control" value="info@example.com">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">شماره تماس</label>
+                                            <input type="text" class="form-control" value="021-12345678">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">آدرس و محل</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">آدرس کامل</label>
+                                        <textarea class="form-control" rows="2">تهران، خیابان ولیعصر، پلاک 123، طبقه 5</textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">شهر</label>
+                                            <input type="text" class="form-control" value="تهران">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">استان</label>
+                                            <input type="text" class="form-control" value="تهران">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">کد پستی</label>
+                                            <input type="text" class="form-control" value="1234567890">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-custom me-2">لغو</button>
+                                    <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Appearance Tab -->
+                            <div class="tab-pane fade" id="appearance" role="tabpanel">
+                                <div class="settings-section">
+                                    <h5 class="section-title">لوگو و آیکون</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">لوگو اصلی</label>
+                                            <div class="upload-area">
+                                                <div class="upload-icon">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <p class="mb-2">لوگو را اینجا بکشید یا کلیک کنید</p>
+                                                <button class="btn btn-sm btn-outline-primary">انتخاب فایل</button>
+                                                <input type="file" accept="image/*" style="display: none;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">آیکون سایت (Favicon)</label>
+                                            <div class="upload-area">
+                                                <div class="upload-icon">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <p class="mb-2">آیکون را اینجا بکشید یا کلیک کنید</p>
+                                                <button class="btn btn-sm btn-outline-primary">انتخاب فایل</button>
+                                                <input type="file" accept="image/*" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">رنگ‌بندی</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">رنگ اصلی</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="color-picker me-3" style="background: #4ecca3;"></div>
+                                                <input type="text" class="form-control" value="#4ecca3">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">رنگ ثانویه</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="color-picker me-3" style="background: #2a9d8f;"></div>
+                                                <input type="text" class="form-control" value="#2a9d8f">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">رنگ پس‌زمینه</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="color-picker me-3" style="background: #f5f7fb;"></div>
+                                                <input type="text" class="form-control" value="#f5f7fb">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">ظاهر سایت</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">قالب سایت</label>
+                                            <select class="form-select">
+                                                <option>قالب پیش‌فرض</option>
+                                                <option>قالب مدرن</option>
+                                                <option>قالب کلاسیک</option>
+                                                <option>قالب تاریک</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">زبان پیش‌فرض</label>
+                                            <select class="form-select">
+                                                <option>فارسی</option>
+                                                <option>انگلیسی</option>
+                                                <option>عربی</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="rtlMode" checked>
+                                        <label class="form-check-label" for="rtlMode">حالت راست به چپ (RTL)</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="darkMode">
+                                        <label class="form-check-label" for="darkMode">حالت تاریک</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-custom me-2">لغو</button>
+                                    <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Notifications Tab -->
+                            <div class="tab-pane fade" id="notifications" role="tabpanel">
+                                <div class="settings-section">
+                                    <h5 class="section-title">اعلان‌های ایمیل</h5>
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-1">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">ثبت نام کاربر جدید</div>
+                                            <div class="text-muted small">ارسال ایمیل به مدیران هنگام ثبت نام کاربر جدید</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newUserEmail" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-2">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">ثبت سفارش جدید</div>
+                                            <div class="text-muted small">ارسال ایمیل به مشتری و مدیران هنگام ثبت سفارش</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newOrderEmail" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-3">
+                                            <i class="fas fa-credit-card"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">پرداخت موفق</div>
+                                            <div class="text-muted small">ارسال ایمیل به مشتری هنگام پرداخت موفق</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="paymentSuccessEmail" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">اعلان‌های پیامکی</h5>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="smsNewOrder" checked>
+                                        <label class="form-check-label" for="smsNewOrder">ارسال پیامک هنگام ثبت سفارش</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="smsOrderStatus" checked>
+                                        <label class="form-check-label" for="smsOrderStatus">ارسال پیامک هنگام تغییر وضعیت سفارش</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="smsPayment">
+                                        <label class="form-check-label" for="smsPayment">ارسال پیامک هنگام پرداخت</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-custom me-2">لغو</button>
+                                    <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Security Tab -->
+                            <div class="tab-pane fade" id="security" role="tabpanel">
+                                <div class="settings-section">
+                                    <h5 class="section-title">احراز هویت</h5>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                                        <label class="form-check-label" for="twoFactorAuth">فعال‌سازی احراز هویت دو مرحله‌ای</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="emailVerification" checked>
+                                        <label class="form-check-label" for="emailVerification">تأیید ایمیل هنگام ثبت نام</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="phoneVerification">
+                                        <label class="form-check-label" for="phoneVerification">تأیید شماره تماس هنگام ثبت نام</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">امنیت سایت</h5>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="sslCertificate" checked>
+                                        <label class="form-check-label" for="sslCertificate">استفاده از گواهی SSL</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="firewall" checked>
+                                        <label class="form-check-label" for="firewall">فعال‌سازی فایروال</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="ddosProtection">
+                                        <label class="form-check-label" for="ddosProtection">حفاظت از حملات DDoS</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">رمز عبور</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">حداقل طول رمز عبور</label>
+                                            <input type="number" class="form-control" value="8" min="6" max="20">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">تعداد روزهای انقضای رمز عبور</label>
+                                            <input type="number" class="form-control" value="90" min="30" max="365">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-custom me-2">لغو</button>
+                                    <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Tab -->
+                            <div class="tab-pane fade" id="payment" role="tabpanel">
+                                <div class="settings-section">
+                                    <h5 class="section-title">درگاه‌های پرداخت</h5>
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-1">
+                                            <i class="fab fa-cc-visa"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">درگاه کارت به کارت</div>
+                                            <div class="text-muted small">پرداخت از طریق کارت‌های بانکی</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="bankTransfer" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-2">
+                                            <i class="fab fa-cc-mastercard"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">درگاه آنلاین بانکی</div>
+                                            <div class="text-muted small">پرداخت مستقیم از طریق بانک‌ها</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="onlineBanking" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon bg-icon-3">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">زرین‌پال</div>
+                                            <div class="text-muted small">درگاه پرداخت ایرانی</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="zarinpal" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5 class="section-title">تنظیمات مالی</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">واحد پول</label>
+                                            <select class="form-select">
+                                                <option>تومان</option>
+                                                <option>ریال</option>
+                                                <option>دلار</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">مالیات بر ارزش افزوده (%)</label>
+                                            <input type="number" class="form-control" value="9" min="0" max="100">
+                                        </div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="taxIncluded" checked>
+                                        <label class="form-check-label" for="taxIncluded">مالیات در قیمت محصولات لحاظ شود</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-custom me-2">لغو</button>
+                                    <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Color Picker
+        document.querySelectorAll('.color-picker').forEach(picker => {
+            picker.addEventListener('click', function() {
+                const colorInput = this.nextElementSibling;
+                colorInput.click();
+            });
+        });
+
+        // Upload Area
+        document.querySelectorAll('.upload-area').forEach(area => {
+            area.addEventListener('click', function() {
+                const fileInput = this.querySelector('input[type="file"]');
+                fileInput.click();
+            });
+        });
+
+        // Form Submission
+        document.querySelectorAll('.btn-primary-custom').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('تنظیمات با موفقیت ذخیره شد');
+            });
+        });
+    </script>
+</body>
+</html>

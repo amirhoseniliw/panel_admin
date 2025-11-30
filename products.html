@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - محصولات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .product-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .product-image {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-new {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .badge-sale {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-category {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .current-price {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+        
+        .old-price {
+            color: var(--text-light);
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+        
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        
+        .product-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-btn-product {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .action-btn-product:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Filters */
+        .filters-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: end;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .filter-input {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            background: #f8fafc;
+        }
+        
+        .filter-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            height: fit-content;
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bg-primary-light {
+            background: linear-gradient(135deg, rgba(78, 204, 163, 0.15) 0%, rgba(42, 157, 143, 0.15) 100%);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            color: #2ecc71;
+        }
+        
+        .bg-warning-light {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            color: #f39c12;
+        }
+        
+        .bg-info-light {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            color: #3498db;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .product-info {
+                padding: 15px;
+            }
+            
+            .action-btn-product {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>مدیریت محصولات</h2>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fas fa-plus me-2"></i>افزودن محصول جدید
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-primary-light">
+                                        <i class="fas fa-box-open"></i>
+                                    </div>
+                                    <h6 class="card-title">مجموع محصولات</h6>
+                                    <h3 class="card-value">1,248</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 12% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-success-light">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h6 class="card-title">محصولات فعال</h6>
+                                    <h3 class="card-value">1,102</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 8% افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-warning-light">
+                                        <i class="fas fa-tags"></i>
+                                    </div>
+                                    <h6 class="card-title">محصولات تخفیف‌دار</h6>
+                                    <h3 class="card-value">89</h3>
+                                    <div class="trend-indicator trend-down">
+                                        <i class="fas fa-arrow-down me-1"></i> 3% کاهش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stats-card">
+                                <div class="card-body p-4">
+                                    <div class="card-icon-wrapper bg-info-light">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h6 class="card-title">امتیاز میانگین</h6>
+                                    <h3 class="card-value">4.2</h3>
+                                    <div class="trend-indicator trend-up">
+                                        <i class="fas fa-arrow-up me-1"></i> 0.3 افزایش
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters Section -->
+                    <div class="filters-section">
+                        <h5 class="mb-4">فیلتر محصولات</h5>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label class="filter-label">دسته‌بندی</label>
+                                <select class="filter-input">
+                                    <option>همه دسته‌بندی‌ها</option>
+                                    <option>لپ تاپ و کامپیوتر</option>
+                                    <option>موبایل و تبلت</option>
+                                    <option>پوشاک و مد</option>
+                                    <option>خانه و آشپزخانه</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">وضعیت</label>
+                                <select class="filter-input">
+                                    <option>همه وضعیت‌ها</option>
+                                    <option>فعال</option>
+                                    <option>غیرفعال</option>
+                                    <option>در انتظار</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">قیمت</label>
+                                <select class="filter-input">
+                                    <option>همه قیمت‌ها</option>
+                                    <option>کمتر از 100,000 تومان</option>
+                                    <option>بین 100,000 تا 500,000 تومان</option>
+                                    <option>بیشتر از 500,000 تومان</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <button class="filter-btn">
+                                    <i class="fas fa-filter me-2"></i>اعمال فیلتر
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid">
+                        <!-- Product 1 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/4ecca3/ffffff?text=لپ تاپ" class="product-image" alt="لپ تاپ">
+                                <span class="product-badge badge-new">جدید</span>
+                                <span class="product-badge badge-sale">تخفیف</span>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">لپ تاپ و کامپیوتر</div>
+                                <h3 class="product-name">لپ تاپ ایسوس مدل VivoBook</h3>
+                                <div class="product-price">
+                                    <span class="current-price">12,500,000 تومان</span>
+                                    <span class="old-price">15,000,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.5</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">142</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">28</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 2 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/3498db/ffffff?text=موبایل" class="product-image" alt="موبایل">
+                                <span class="product-badge badge-new">جدید</span>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">موبایل و تبلت</div>
+                                <h3 class="product-name">گوشی سامسونگ مدل Galaxy S23</h3>
+                                <div class="product-price">
+                                    <span class="current-price">24,900,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.8</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">89</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">15</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 3 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/f39c12/ffffff?text=پوشاک" class="product-image" alt="پوشاک">
+                                <span class="product-badge badge-sale">تخفیف</span>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">پوشاک و مد</div>
+                                <h3 class="product-name">پیراهن مردانه مدل کلاسیک</h3>
+                                <div class="product-price">
+                                    <span class="current-price">450,000 تومان</span>
+                                    <span class="old-price">600,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.2</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">256</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">42</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 4 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/9b59b6/ffffff?text=خانه" class="product-image" alt="خانه">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">خانه و آشپزخانه</div>
+                                <h3 class="product-name">ظرف شویی برقی مدل پیشرفته</h3>
+                                <div class="product-price">
+                                    <span class="current-price">8,200,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.6</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">67</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">8</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 5 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/e74c3c/ffffff?text=کتاب" class="product-image" alt="کتاب">
+                                <span class="product-badge badge-new">جدید</span>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">کتاب و لوازم التحریر</div>
+                                <h3 class="product-name">کتاب برنامه نویسی پایتون</h3>
+                                <div class="product-price">
+                                    <span class="current-price">180,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.9</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">112</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">35</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 6 -->
+                        <div class="product-card">
+                            <div class="position-relative">
+                                <img src="https://placehold.co/300x200/1abc9c/ffffff?text=اسباب بازی" class="product-image" alt="اسباب بازی">
+                                <span class="product-badge badge-sale">تخفیف</span>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">اسباب بازی و بازی</div>
+                                <h3 class="product-name">خودروی کنترل از راه دور</h3>
+                                <div class="product-price">
+                                    <span class="current-price">320,000 تومان</span>
+                                    <span class="old-price">450,000 تومان</span>
+                                </div>
+                                <div class="product-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">4.3</div>
+                                        <div class="stat-label">امتیاز</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">78</div>
+                                        <div class="stat-label">فروش</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">22</div>
+                                        <div class="stat-label">موجودی</div>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="action-btn-product" title="مشاهده"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn-product" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn-product" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">افزودن محصول جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">نام محصول</label>
+                                <input type="text" class="form-control rounded-3" placeholder="نام محصول را وارد کنید">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">دسته‌بندی</label>
+                                <select class="form-select rounded-3">
+                                    <option>انتخاب دسته‌بندی</option>
+                                    <option>لپ تاپ و کامپیوتر</option>
+                                    <option>موبایل و تبلت</option>
+                                    <option>پوشاک و مد</option>
+                                    <option>خانه و آشپزخانه</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">قیمت (تومان)</label>
+                                <input type="number" class="form-control rounded-3" placeholder="قیمت محصول">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">تخفیف (%)</label>
+                                <input type="number" class="form-control rounded-3" placeholder="درصد تخفیف">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">توضیحات</label>
+                            <textarea class="form-control rounded-3" rows="3" placeholder="توضیحات محصول"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">موجودی</label>
+                                <input type="number" class="form-control rounded-3" placeholder="تعداد موجودی">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">وزن (گرم)</label>
+                                <input type="number" class="form-control rounded-3" placeholder="وزن محصول">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">تصاویر محصول</label>
+                            <input type="file" class="form-control rounded-3" multiple>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="activeProduct" checked>
+                            <label class="form-check-label" for="activeProduct">فعال باشد</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary-custom">ذخیره محصول</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Action buttons functionality
+        document.querySelectorAll('.action-btn-product').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('i').className;
+                if (action.includes('eye')) {
+                    alert('مشاهده اطلاعات محصول');
+                } else if (action.includes('edit')) {
+                    alert('ویرایش اطلاعات محصول');
+                } else if (action.includes('trash')) {
+                    if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
+                        alert('محصول حذف شد');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

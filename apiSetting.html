@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - تنظیمات API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: #16213e;
+            --sidebar-active: #0f3460;
+            --header-bg: #ffffff;
+            --primary-color: #4ecca3;
+            --secondary-color: #2c3e50;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f3460 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 260px;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 0 30px 30px 0;
+            margin: 0 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #2a9d8f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            font-size: 18px;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-right: 260px;
+            transition: var(--transition);
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--header-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 300px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Page Content */
+        .page-container {
+            padding: 30px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2a9d8f 100%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        /* API Tabs */
+        .api-tabs {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            padding: 15px 25px;
+            color: var(--text-light);
+            font-weight: 500;
+            border-radius: 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--text-dark);
+        }
+        
+        .tab-content {
+            padding: 30px;
+        }
+        
+        .api-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-left: 10px;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            background: #f8fafc;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 204, 163, 0.25);
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .api-key {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .endpoint-card {
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .method-get {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .method-post {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .method-put {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+        
+        .method-delete {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .permission-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+        
+        .permission-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .bg-icon-1 {
+            background: rgba(78, 204, 163, 0.15);
+            color: var(--primary-color);
+        }
+        
+        .bg-icon-2 {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+        
+        .bg-icon-3 {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+        
+        .bg-icon-4 {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+        }
+        
+        .token-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+        
+        .token-info {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+        
+        .token-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+        
+        .status-inactive {
+            background: rgba(149, 165, 166, 0.15);
+            color: #95a5a6;
+        }
+        
+        .status-expired {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header .logo-text {
+                display: none;
+            }
+            
+            .sidebar .sidebar-header {
+                justify-content: center;
+                padding: 25px 0;
+            }
+            
+            .sidebar .logo-icon {
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu i {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .sidebar .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-right: 80px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                margin-top: 80px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                border-right: none;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                padding: 0;
+                height: 100%;
+                align-items: center;
+            }
+            
+            .sidebar-menu li {
+                flex: 1;
+                margin: 0;
+                height: 100%;
+            }
+            
+            .sidebar-menu a {
+                flex-direction: column;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                margin: 0 0 5px 0;
+                font-size: 20px;
+            }
+            
+            .tab-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">مدیریت</div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span class="menu-text">داشبورد</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">کاربران</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tags"></i>
+                            <span class="menu-text">دسته‌بندی‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-box-open"></i>
+                            <span class="menu-text">محصولات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">سفارشات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="menu-text">تراکنش‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-server"></i>
+                            <span class="menu-text">پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="menu-text">شارژ پنل‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span class="menu-text">بلیط‌های برگشتی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-video"></i>
+                            <span class="menu-text">ویدیو معرفی محصول</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span class="menu-text">نظرات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-blog"></i>
+                            <span class="menu-text">بلاگ‌ها</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span class="menu-text">تنظیمات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-wallet"></i>
+                            <span class="menu-text">مالی</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="menu-text">تنظیمات SEO</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fas fa-code"></i>
+                            <span class="menu-text">تنظیمات API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headset"></i>
+                            <span class="menu-text">تیکت‌ها</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content" id="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div></div> <!-- Empty div for spacing -->
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input type="text" class="border-0 bg-transparent w-75" placeholder="جستجو...">
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-4">
+                            <button class="btn position-relative p-0 border-0" type="button" id="notificationDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fs-5 text-muted"></i>
+                                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">پیام جدید از کاربر</a></li>
+                                <li><a class="dropdown-item" href="#">سفارش جدید ثبت شد</a></li>
+                                <li><a class="dropdown-item" href="#">پرداخت تایید شد</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="user-dropdown dropdown" id="userDropdown">
+                            <img src="https://placehold.co/40x40/4ecca3/ffffff?text=A" class="user-avatar" alt="User">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>پروفایل</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>تنظیمات</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>خروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div class="page-container">
+                    <div class="page-title">
+                        <h2>تنظیمات API</h2>
+                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#createTokenModal">
+                            <i class="fas fa-plus me-2"></i>ایجاد توکن جدید
+                        </button>
+                    </div>
+
+                    <!-- API Tabs -->
+                    <div class="api-tabs">
+                        <ul class="nav nav-tabs" id="apiTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">عمومی</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tokens-tab" data-bs-toggle="tab" data-bs-target="#tokens" type="button" role="tab">توکن‌ها</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="endpoints-tab" data-bs-toggle="tab" data-bs-target="#endpoints" type="button" role="tab">اندپوینت‌ها</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#permissions" type="button" role="tab">مجوزها</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rate-tab" data-bs-toggle="tab" data-bs-target="#rate" type="button" role="tab">محدودیت نرخ</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="apiTabContent">
+                            <!-- General Tab -->
+                            <div class="tab-pane fade show active" id="general" role="tabpanel">
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-cog"></i> تنظیمات عمومی API</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">آدرس پایه API</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="https://api.example.com/v1/" readonly>
+                                                <button class="btn btn-outline-secondary copy-btn">کپی</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">نسخه API</label>
+                                            <select class="form-select">
+                                                <option>v1.0</option>
+                                                <option>v1.1</option>
+                                                <option>v2.0</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="apiEnabled" checked>
+                                        <label class="form-check-label" for="apiEnabled">فعال‌سازی API</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="corsEnabled" checked>
+                                        <label class="form-check-label" for="corsEnabled">فعال‌سازی CORS</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="sslRequired" checked>
+                                        <label class="form-check-label" for="sslRequired">SSL الزامی</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-key"></i> کلیدهای API</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">کلید عمومی (Public Key)</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="pk_live_51J3X2AKI2nd3X2AKI2nd3X2AKI2nd3X2AKI2nd3X2AKI2nd3X2A" readonly>
+                                            <button class="btn btn-outline-secondary copy-btn">کپی</button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">کلید خصوصی (Secret Key)</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" value="" readonly>
+                                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword(this)">👁️</button>
+                                            <button class="btn btn-outline-secondary copy-btn">کپی</button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-outline-custom me-2">تولید مجدد کلیدها</button>
+                                        <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tokens Tab -->
+                            <div class="tab-pane fade" id="tokens" role="tabpanel">
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-key"></i> توکن‌های دسترسی</h5>
+                                    <div class="token-item">
+                                        <div class="token-info">
+                                            <div class="fw-bold">توکن اصلی سیستم</div>
+                                            <div class="text-muted small">ایجاد شده در: 1402/01/01</div>
+                                            <div class="text-muted small">انقضا: 1403/01/01</div>
+                                        </div>
+                                        <div class="token-status status-active">فعال</div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary me-2">ویرایش</button>
+                                            <button class="btn btn-sm btn-outline-danger">حذف</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="token-item">
+                                        <div class="token-info">
+                                            <div class="fw-bold">توکن اپلیکیشن موبایل</div>
+                                            <div class="text-muted small">ایجاد شده در: 1402/03/15</div>
+                                            <div class="text-muted small">انقضا: 1402/09/15</div>
+                                        </div>
+                                        <div class="token-status status-active">فعال</div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary me-2">ویرایش</button>
+                                            <button class="btn btn-sm btn-outline-danger">حذف</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="token-item">
+                                        <div class="token-info">
+                                            <div class="fw-bold">توکن اپلیکیشن وب</div>
+                                            <div class="text-muted small">ایجاد شده در: 1402/02/20</div>
+                                            <div class="text-muted small">انقضا: منقضی شده</div>
+                                        </div>
+                                        <div class="token-status status-expired">منقضی شده</div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary me-2">ویرایش</button>
+                                            <button class="btn btn-sm btn-outline-danger">حذف</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#createTokenModal">
+                                            <i class="fas fa-plus me-2"></i>ایجاد توکن جدید
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Endpoints Tab -->
+                            <div class="tab-pane fade" id="endpoints" role="tabpanel">
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-plug"></i> اندپوینت‌های اصلی</h5>
+                                    <div class="endpoint-card">
+                                        <div>
+                                            <span class="endpoint-method method-get">GET</span>
+                                            <span class="fw-bold">/api/v1/products</span>
+                                        </div>
+                                        <div class="endpoint-url">https://api.example.com/v1/products</div>
+                                        <div class="text-muted">دریافت لیست محصولات</div>
+                                    </div>
+                                    
+                                    <div class="endpoint-card">
+                                        <div>
+                                            <span class="endpoint-method method-get">GET</span>
+                                            <span class="fw-bold">/api/v1/products/{id}</span>
+                                        </div>
+                                        <div class="endpoint-url">https://api.example.com/v1/products/123</div>
+                                        <div class="text-muted">دریافت اطلاعات یک محصول خاص</div>
+                                    </div>
+                                    
+                                    <div class="endpoint-card">
+                                        <div>
+                                            <span class="endpoint-method method-post">POST</span>
+                                            <span class="fw-bold">/api/v1/orders</span>
+                                        </div>
+                                        <div class="endpoint-url">https://api.example.com/v1/orders</div>
+                                        <div class="text-muted">ایجاد سفارش جدید</div>
+                                    </div>
+                                    
+                                    <div class="endpoint-card">
+                                        <div>
+                                            <span class="endpoint-method method-put">PUT</span>
+                                            <span class="fw-bold">/api/v1/users/{id}</span>
+                                        </div>
+                                        <div class="endpoint-url">https://api.example.com/v1/users/456</div>
+                                        <div class="text-muted">بروزرسانی اطلاعات کاربر</div>
+                                    </div>
+                                    
+                                    <div class="endpoint-card">
+                                        <div>
+                                            <span class="endpoint-method method-delete">DELETE</span>
+                                            <span class="fw-bold">/api/v1/categories/{id}</span>
+                                        </div>
+                                        <div class="endpoint-url">https://api.example.com/v1/categories/789</div>
+                                        <div class="text-muted">حذف یک دسته‌بندی</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Permissions Tab -->
+                            <div class="tab-pane fade" id="permissions" role="tabpanel">
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-user-shield"></i> مجوزهای دسترسی</h5>
+                                    <div class="permission-item">
+                                        <div class="permission-icon bg-icon-1">
+                                            <i class="fas fa-box-open"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">دسترسی به محصولات</div>
+                                            <div class="text-muted small">امکان خواندن و نوشتن اطلاعات محصولات</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="productsPermission" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-icon bg-icon-2">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">دسترسی به سفارشات</div>
+                                            <div class="text-muted small">امکان خواندن و نوشتن اطلاعات سفارشات</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="ordersPermission" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-icon bg-icon-3">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">دسترسی به کاربران</div>
+                                            <div class="text-muted small">امکان خواندن و نوشتن اطلاعات کاربران</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="usersPermission">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-icon bg-icon-4">
+                                            <i class="fas fa-tags"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">دسترسی به دسته‌بندی‌ها</div>
+                                            <div class="text-muted small">امکان خواندن و نوشتن اطلاعات دسته‌بندی‌ها</div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="categoriesPermission" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-outline-custom me-2">لغو</button>
+                                        <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rate Limit Tab -->
+                            <div class="tab-pane fade" id="rate" role="tabpanel">
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-tachometer-alt"></i> محدودیت نرخ (Rate Limit)</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">حداکثر درخواست در دقیقه</label>
+                                            <input type="number" class="form-control" value="1000">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">حداکثر درخواست در ساعت</label>
+                                            <input type="number" class="form-control" value="50000">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">حداکثر درخواست در روز</label>
+                                            <input type="number" class="form-control" value="1000000">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">بازه زمانی مسدودسازی (دقیقه)</label>
+                                            <input type="number" class="form-control" value="10">
+                                        </div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="ipBasedLimit" checked>
+                                        <label class="form-check-label" for="ipBasedLimit">محدودیت بر اساس آدرس IP</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="tokenBasedLimit" checked>
+                                        <label class="form-check-label" for="tokenBasedLimit">محدودیت بر اساس توکن</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="api-section">
+                                    <h5 class="section-title"><i class="fas fa-chart-line"></i> آمار استفاده</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <div class="border rounded-3 p-3 text-center">
+                                                <div class="fs-4 fw-bold text-primary">856</div>
+                                                <div class="text-muted">درخواست امروز</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="border rounded-3 p-3 text-center">
+                                                <div class="fs-4 fw-bold text-success">24,560</div>
+                                                <div class="text-muted">درخواست این ماه</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="border rounded-3 p-3 text-center">
+                                                <div class="fs-4 fw-bold text-warning">1.2M</div>
+                                                <div class="text-muted">درخواست امسال</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-outline-custom me-2">لغو</button>
+                                        <button class="btn btn-primary-custom">ذخیره تغییرات</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Token Modal -->
+    <div class="modal fade" id="createTokenModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">ایجاد توکن جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">نام توکن</label>
+                            <input type="text" class="form-control" placeholder="نام توضیحی برای توکن">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">تاریخ انقضا</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">مجوزهای دسترسی</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="readProducts" checked>
+                                <label class="form-check-label" for="readProducts">خواندن محصولات</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="writeProducts">
+                                <label class="form-check-label" for="writeProducts">نوشتن محصولات</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="readOrders" checked>
+                                <label class="form-check-label" for="readOrders">خواندن سفارشات</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="writeOrders">
+                                <label class="form-check-label" for="writeOrders">نوشتن سفارشات</label>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="ipRestriction">
+                            <label class="form-check-label" for="ipRestriction">محدودیت بر اساس IP</label>
+                        </div>
+                        <div class="mb-3" id="ipField" style="display: none;">
+                            <label class="form-label">آدرس IP مجاز</label>
+                            <input type="text" class="form-control" placeholder="مثال: 192.168.1.1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary-custom">ایجاد توکن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // User Dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userDropdown').contains(e.target)) {
+                document.querySelector('.dropdown-menu').classList.remove('show');
+            }
+        });
+
+        // Copy Button Functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                input.select();
+                document.execCommand('copy');
+                const originalText = this.textContent;
+                this.textContent = 'کپی شد!';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            });
+        });
+
+        // Toggle Password Visibility
+        function togglePassword(button) {
+            const input = button.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🔒';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // IP Restriction Toggle
+        document.getElementById('ipRestriction').addEventListener('change', function() {
+            const ipField = document.getElementById('ipField');
+            if (this.checked) {
+                ipField.style.display = 'block';
+            } else {
+                ipField.style.display = 'none';
+            }
+        });
+
+        // Form Submission
+        document.querySelectorAll('.btn-primary-custom').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('تنظیمات API با موفقیت ذخیره شد');
+            });
+        });
+
+        // Token Creation
+        document.querySelector('#createTokenModal .btn-primary-custom').addEventListener('click', function() {
+            alert('توکن جدید با موفقیت ایجاد شد');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createTokenModal'));
+            modal.hide();
+        });
+    </script>
+</body>
+</html>
